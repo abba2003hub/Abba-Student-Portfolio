@@ -1,0 +1,102 @@
+
+// ACADEMIC PLANNER
+
+const tasks = [];
+
+function addTask() {
+    const input = document.getElementById("taskInput");
+    if (!input) return;
+
+    const taskText = input.value.trim();
+
+    if (taskText === "") {
+        alert("Please enter a task!");
+        return;
+    }
+
+    tasks.push({
+        text: taskText,
+        completed: false
+    });
+
+    input.value = "";
+    displayTasks();
+}
+
+function displayTasks() {
+    const taskList = document.getElementById("taskList");
+    if (!taskList) return;
+
+    taskList.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        const taskText = document.createElement("span");
+
+        taskText.textContent = task.text;
+
+        if (task.completed) {
+            taskText.style.textDecoration = "line-through";
+        }
+
+        const completeButton = document.createElement("button");
+        completeButton.textContent = task.completed ? "Undo" : "Complete";
+        completeButton.type = "button";
+
+        completeButton.addEventListener("click", () => {
+            tasks[index].completed = !tasks[index].completed;
+            displayTasks();
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.type = "button";
+
+        deleteButton.addEventListener("click", () => {
+            tasks.splice(index, 1);
+            displayTasks();
+        });
+
+        li.append(taskText, completeButton, deleteButton);
+        taskList.appendChild(li);
+    });
+}
+
+
+// CONTACT FORM VALIDATION
+
+const contactForm = document.getElementById("contactForm");
+
+if (contactForm) {
+    contactForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const message = document.getElementById("message").value.trim();
+        const formMessage = document.getElementById("formMessage");
+
+        if (!name || !email || !phone || !message) {
+            formMessage.textContent = "Please fill in all fields.";
+            return;
+        }
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email)) {
+            formMessage.textContent = "Please enter a valid email address.";
+            return;
+        }
+
+        if (!/^\d+$/.test(phone)) {
+            formMessage.textContent = "Phone number must contain digits only.";
+            return;
+        }
+
+        formMessage.textContent =
+            "Your form has been validated successfully!";
+
+        contactForm.reset();
+    });
+}
